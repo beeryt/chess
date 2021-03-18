@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.16)
-project(fluid)
+project(main)
 
 find_package(SDL2 REQUIRED)
 
-add_executable(fluid src/main.cpp src/graphics.cpp)
-target_include_directories(fluid PUBLIC include)
-target_link_libraries(fluid PUBLIC SDL2)
+add_executable(main src/main.cpp src/graphics.cpp)
+target_include_directories(main PUBLIC include)
+target_link_libraries(main PRIVATE SDL2)
 
