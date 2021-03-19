@@ -63,3 +63,14 @@ void Graphics::fillRect(int x, int y, int w, int h, Color c) {
   SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
   SDL_RenderFillRect(renderer, &rect);
 }
+
+Texture& Graphics::createTexture(const std::string& filename) {
+  textures.push_back(std::make_unique<Texture>(filename, renderer));
+  return *textures.back().get();
+}
+
+void Graphics::drawSprite(const Sprite& sprite, int x, int y, int w, int h) {
+  SDL_Rect rect{ x, y, w, h };
+  sprite.draw(renderer, rect);
+}
+

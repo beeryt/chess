@@ -99,3 +99,4 @@ void Board::debug() const {
     cout << p << endl;
   }
 }
+

@@ -1,6 +1,12 @@
 #pragma once
-#include <SDL2/SDL.h>
+#include <SDL.h>
+#include "texture.h"
+#include "sprite.h"
+
 #include <functional>
+#include <memory>
+#include <string>
+#include <vector>
 
 struct Color {
   uint8_t r, g, b, a;
@@ -22,16 +28,20 @@ class Graphics {
     void setLogical(int w, int h);
     void getLogical(int*w, int*h);
 
+    Texture& createTexture(const std::string&);
+
     bool loop();
     void clear();
     void swap();
 
     void drawRect(int x, int y, int w, int h, Color c);
     void fillRect(int x, int y, int w, int h, Color c);
+    void drawSprite(const Sprite&, int x, int y, int w, int h);
 
   private:
     SDL_Window* window;
     SDL_Renderer* renderer;
+    std::vector<std::unique_ptr<Texture>> textures;
     MotionCallback motionCallback;
     ClickCallback clickCallback;
 };
