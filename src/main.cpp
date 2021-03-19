@@ -13,42 +13,18 @@ using SpriteMap = std::map<chess::Piece::Type, Sprite>;
 SpriteMap white_sprites;
 SpriteMap black_sprites;
 
-void initialize_sprites(Texture& texture, SpriteMap& sprites, int offset) {
-  sprites[chess::Piece::King] = Sprite{ &texture };
-  sprites[chess::Piece::King].setRegion(texture.getRegion());
-  sprites[chess::Piece::King].setHFrames(6);
-  sprites[chess::Piece::King].setVFrames(2);
-  sprites[chess::Piece::King].setFrame(0 + offset);
+void initialize_sprites(Texture& texture, SpriteMap& sprites, unsigned offset) {
+  Sprite defaultSprite{ &texture };
+  defaultSprite.setRegion(texture.getRegion());
+  defaultSprite.setHFrames(6);
+  defaultSprite.setVFrames(2);
 
-  sprites[chess::Piece::Queen] = Sprite{ &texture };
-  sprites[chess::Piece::Queen].setRegion(texture.getRegion());
-  sprites[chess::Piece::Queen].setHFrames(6);
-  sprites[chess::Piece::Queen].setVFrames(2);
-  sprites[chess::Piece::Queen].setFrame(1 + offset);
-
-  sprites[chess::Piece::Bishop] = Sprite{ &texture };
-  sprites[chess::Piece::Bishop].setRegion(texture.getRegion());
-  sprites[chess::Piece::Bishop].setHFrames(6);
-  sprites[chess::Piece::Bishop].setVFrames(2);
-  sprites[chess::Piece::Bishop].setFrame(2 + offset);
-
-  sprites[chess::Piece::Knight] = Sprite{ &texture };
-  sprites[chess::Piece::Knight].setRegion(texture.getRegion());
-  sprites[chess::Piece::Knight].setHFrames(6);
-  sprites[chess::Piece::Knight].setVFrames(2);
-  sprites[chess::Piece::Knight].setFrame(3 + offset);
-
-  sprites[chess::Piece::Rook] = Sprite{ &texture };
-  sprites[chess::Piece::Rook].setRegion(texture.getRegion());
-  sprites[chess::Piece::Rook].setHFrames(6);
-  sprites[chess::Piece::Rook].setVFrames(2);
-  sprites[chess::Piece::Rook].setFrame(4 + offset);
-
-  sprites[chess::Piece::Pawn] = Sprite{ &texture };
-  sprites[chess::Piece::Pawn].setRegion(texture.getRegion());
-  sprites[chess::Piece::Pawn].setHFrames(6);
-  sprites[chess::Piece::Pawn].setVFrames(2);
-  sprites[chess::Piece::Pawn].setFrame(5 + offset);
+  sprites[chess::Piece::King]   = Sprite{ defaultSprite, 0 + offset };
+  sprites[chess::Piece::Queen]  = Sprite{ defaultSprite, 1 + offset };
+  sprites[chess::Piece::Bishop] = Sprite{ defaultSprite, 2 + offset };
+  sprites[chess::Piece::Knight] = Sprite{ defaultSprite, 3 + offset };
+  sprites[chess::Piece::Rook]   = Sprite{ defaultSprite, 4 + offset };
+  sprites[chess::Piece::Pawn]   = Sprite{ defaultSprite, 5 + offset };
 }
 
 void drawBoard(Graphics& gfx, chess::Board board) {

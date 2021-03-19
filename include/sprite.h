@@ -5,10 +5,8 @@
 class Sprite {
   public:
     Sprite(Texture* texture = nullptr);
-    virtual ~Sprite();
-
-    Sprite(Sprite&&) noexcept;
-    Sprite& operator=(Sprite&&) noexcept;
+    Sprite(Sprite& copy, unsigned);
+    virtual ~Sprite() = default;
 
     void draw(SDL_Renderer*, SDL_Rect dst) const;
 

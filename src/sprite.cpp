@@ -7,16 +7,9 @@ Sprite::Sprite(Texture* texture) : texture(texture) {
   }
 }
 
-Sprite& Sprite::operator=(Sprite&& o) noexcept {
-  frame = o.frame;
-  hframes = o.hframes;
-  vframes = o.vframes;
-  texture = o.texture;
-  o.texture = nullptr;
-  return *this;
+Sprite::Sprite(Sprite& sprite, unsigned frame) : Sprite(sprite) {
+  setFrame(frame);
 }
-
-Sprite::~Sprite() {}
 
 void Sprite::draw(SDL_Renderer* renderer, SDL_Rect dst) const {
   int w = region.w / hframes;
