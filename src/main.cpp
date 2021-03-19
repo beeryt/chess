@@ -4,6 +4,8 @@
 #include <chrono>
 #include <map>
 
+#define SCALE 256
+
 Color WHITE{ 216, 191, 161 };
 Color BLACK{ 158, 116, 66 };
 
@@ -55,17 +57,17 @@ void drawBoard(Graphics& gfx, chess::Board board) {
       bool even = (file + rank) % 2 == 0;
       Color color = even ? WHITE : BLACK;
       int x,y,w,h;
-      w = h = 256;
-      x = file * 256;
-      y = rank * 256;
+      w = h = SCALE;
+      x = file * SCALE;
+      y = rank * SCALE;
       gfx.fillRect(x,y,w,h,color);
     }
   }
   for (auto& p : board.pieces) {
     SpriteMap& sprites = p.team == chess::Piece::White ? white_sprites : black_sprites;
-    int x = (p.coord % 8) * 256;
-    int y = (p.coord / 8) * 256;
-    gfx.drawSprite(sprites[p.type], x, y, 256, 256);
+    int x = (p.coord % 8) * SCALE;
+    int y = (p.coord / 8) * SCALE;
+    gfx.drawSprite(sprites[p.type], x, y, SCALE, SCALE);
   }
 }
 
@@ -77,14 +79,14 @@ inline int floor_div(int a, int b) {
 
 chess::Coordinate ScreenToCoordinate(int x, int y) {
   return chess::Coordinate{
-    floor_div(x,256),
-    floor_div(y,256)
+    floor_div(x,SCALE),
+    floor_div(y,SCALE)
   };
 }
 
 int main() {
-  Graphics gfx("Window Title");
-  gfx.setLogical(8*256,8*256);
+  Graphics gfx("Window Title", SCALE, SCALE);
+  gfx.setLogical(8*SCALE,8*SCALE);
   printf("sizeof(chess::Piece): %ld\n", sizeof(chess::Piece));
   printf("sizeof(chess::Board): %ld\n", sizeof(chess::Board));
   printf("sizeof(Texture): %ld\n", sizeof(Texture));

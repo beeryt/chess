@@ -15,7 +15,7 @@ struct Color {
 
 class Graphics {
   public:
-    Graphics(const char* title = "");
+    Graphics(const char* title = "", int w = 320, int h = 240);
 
     using MotionCallback = std::function<void(int,int)>;
     void setMotionCallback(MotionCallback cb);

@@ -13,10 +13,8 @@ void initialize() {
   }
 }
 
-Graphics::Graphics(const char* title) {
+Graphics::Graphics(const char* title, int w, int h) {
   initialize();
-  int w = 320;
-  int h = 240;
   uint32_t flags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE;
   if (0 != SDL_CreateWindowAndRenderer(w,h,flags,&window,&renderer)) {
     fprintf(stderr, "Failed to create window: %s\n", SDL_GetError());
