@@ -16,6 +16,8 @@ Coordinate::Coordinate(int x, int y) : Coordinate(x + y * 8) {
 bool Coordinate::operator==(const Coordinate& o) const { return idx == o.idx; }
 bool Coordinate::operator!=(const Coordinate& o) const { return idx != o.idx; }
 
+Piece::Piece(Type type, Coordinate coord) : type(type), coord(coord.idx) {}
+
 Board::Board(const string& FEN) {
   cout << "FEN: " << FEN << endl;
   { // process FEN
@@ -23,13 +25,11 @@ Board::Board(const string& FEN) {
     uint8_t idx = 0;
     for (char c : FEN) {
       if (c == ' ') { field++; continue; }
-      Piece::Team color;
-      Piece::Type type;
+      auto type = Piece::Type();
       switch (field) {
         case 0: // Piece Placement
           if (isdigit(c)) { idx += (c - '0'); continue; }
           if (c == '/') { continue; }
-          color = isupper(c) ? Piece::Team::White : Piece::Team::Black;
           switch (toupper(c)) {
             case 'P': type = Piece::Type::Pawn; break;
             case 'N': type = Piece::Type::Knight; break;
@@ -39,14 +39,14 @@ Board::Board(const string& FEN) {
             case 'K': type = Piece::Type::King; break;
             default: printf("TODO: unrecognized token: %c\n", c); break;
           }
-          m_pieces.push_back({ type, color, idx++ });
+          if (isupper(c)) white.push_back({ type, idx++ });
+          else black.push_back({ type, idx++ });
           break;
 
         case 1: // Active Color
-          if (c == 'w') { color = Piece::White; }
-          else if (c == 'b') { color = Piece::Black; }
+          if (c == 'w') white_to_move = true;
+          else if (c == 'b') white_to_move = false;
           else { printf("TODO: unrecognized token: %c\n", c); }
-          active = color;
           break;
 
         case 2: // Castling Availability
@@ -63,25 +63,6 @@ Board::Board(const string& FEN) {
       }
     }
   }
-}
-
-std::ostream& chess::operator<<(std::ostream& os, const Piece& p) {
-  switch (p.team) {
-    case Piece::White: os << "White "; break;
-    case Piece::Black: os << "Black "; break;
-  }
-  switch (p.type) {
-    case Piece::Pawn: os << "Pawn"; break;
-    case Piece::Knight: os << "Knight"; break;
-    case Piece::Bishop: os << "Bishop"; break;
-    case Piece::Rook: os << "Rook"; break;
-    case Piece::Queen: os << "Queen"; break;
-    case Piece::King: os << "King"; break;
-  }
-  os << " ";
-  os << static_cast<char>('A' + p.coord % 8);
-  os << static_cast<char>('8' - p.coord / 8);
-  return os;
 }
 
 std::ostream& chess::operator<<(std::ostream& os, const Coordinate& c) {

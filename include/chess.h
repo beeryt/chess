@@ -6,24 +6,6 @@ namespace chess {
   using std::vector;
   using std::string;
 
-  /// A Piece encodes the Type (e.g. Pawn) and Coordinate in a 9 bits.
-  struct Piece {
-    /// @todo Remove since Piece does not need to store color.
-    enum Team { White, Black };
-    /// Piece::Type enumerates the standard chess pieces.
-    enum Type { Pawn, Knight, Bishop, Rook, Queen, King };
-    /// The Piece::Type can be encoded into 3 bits.
-    Type type : 3;
-    /// @todo Remove since it is not necessary to store color.
-    Team team : 1;
-    /// The Coordinate can be encoded into 6 bits.
-    uint8_t coord : 6;
-  };
-
-  namespace FEN {
-    const string Start = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-  }
-
   /// A Coordinate encodes the x- and y-coordinates as a single index.
   struct Coordinate {
     /// The x- and y-coordinates are encoded into a single index.
@@ -47,6 +29,24 @@ namespace chess {
     bool operator!=(const Coordinate&) const;
   };
 
+  /// A Piece encodes the Piece::Type (e.g. Pawn) and chess::Coordinate in to 9 bits.
+  struct Piece {
+    /// Piece::Type enumerates the standard chess pieces.
+    enum Type { None, Pawn, Knight, Bishop, Rook, Queen, King };
+    /// The Piece::Type is encoded in 3 bits.
+    Type type : 3;
+    /// The chess::Coordinate is encoded in 6 bits.
+    uint8_t coord : 6;
+    /// @brief Default constructor creates an invalid piece.
+    /// @param type The Piece::Type of the Piece.
+    /// @param coordinate The chess::Coordinate of the Piece.
+    Piece(Type type = None, Coordinate coordinate = Coordinate());
+  };
+
+  namespace FEN {
+    const string Start = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+  }
+
   struct Move {
   };
 
@@ -56,11 +56,16 @@ namespace chess {
       /// @brief FEN string constructor for Board (defaults to FEN::Start).
       /// @param FEN A FEN string for the Board state.
       Board(const string& FEN = FEN::Start);
-      const vector<Piece>& pieces = m_pieces;
+
+      /// List of white pieces.
+      const std::vector<Piece>& white_pieces = white;
+      /// List of black pieces.
+      const std::vector<Piece>& black_pieces = black;
 
     private:
-      Piece::Team active;
-      std::vector<Piece> m_pieces;
+      bool white_to_move = true;
+      std::vector<Piece> white;
+      std::vector<Piece> black;
   };
 
   std::ostream& operator<<(std::ostream& os, const Piece& p);

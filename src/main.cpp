@@ -30,6 +30,24 @@ void initialize_sprites(Texture& texture, SpriteMap& sprites, unsigned offset) {
   sprites[chess::Piece::Pawn]   = Sprite{ defaultSprite, 5 + offset };
 }
 
+inline int floor_div(int a, int b) {
+  int d = a / b;
+  int r = a % b;
+  return r ? (d - ((a < 0) ^ (b < 0))) : d;
+}
+
+chess::Coordinate ScreenToCoordinate(int x, int y) {
+  return chess::Coordinate{
+    floor_div(x,SCALE),
+    floor_div(y,SCALE)
+  };
+}
+
+void CoordinateToScreen(chess::Coordinate c, int& x, int& y) {
+  x = (c.idx % 8) * SCALE;
+  y = (c.idx / 8) * SCALE;
+}
+
 void drawBoard(Graphics& gfx, chess::Board board) {
   for (int file = 0; file < 8; ++file) {
     for (int rank = 0; rank < 8; ++rank) {
@@ -42,25 +60,15 @@ void drawBoard(Graphics& gfx, chess::Board board) {
       gfx.fillRect(x,y,w,h,color);
     }
   }
-  for (auto& p : board.pieces) {
-    SpriteMap& sprites = p.team == chess::Piece::White ? white_sprites : black_sprites;
-    int x = (p.coord % 8) * SCALE;
-    int y = (p.coord / 8) * SCALE;
-    gfx.drawSprite(sprites[p.type], x, y, SCALE, SCALE);
-  }
-}
-
-inline int floor_div(int a, int b) {
-  int d = a / b;
-  int r = a % b;
-  return r ? (d - ((a < 0) ^ (b < 0))) : d;
-}
-
-chess::Coordinate ScreenToCoordinate(int x, int y) {
-  return chess::Coordinate{
-    floor_div(x,SCALE),
-    floor_div(y,SCALE)
+  auto drawPieces = [&gfx](SpriteMap& sprites, const std::vector<chess::Piece>& pieces) {
+    for (auto& p : pieces) {
+      int x,y;
+      CoordinateToScreen(p.coord, x, y);
+      gfx.drawSprite(sprites[p.type], x, y, SCALE, SCALE);
+    }
   };
+  drawPieces(white_sprites, board.white_pieces);
+  drawPieces(black_sprites, board.black_pieces);
 }
 
 int main() {
