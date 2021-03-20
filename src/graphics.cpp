@@ -41,6 +41,7 @@ void Graphics::swap() {
   SDL_RenderPresent(renderer);
 }
 
+/// @todo Add a Graphics::clearColor parameter
 void Graphics::clear() {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
   SDL_RenderClear(renderer);
