@@ -10,7 +10,7 @@ Coordinate::operator bool() const { return idx < 64; }
 Coordinate::Coordinate(int idx) : idx(idx) {
   if (!(*this)) { idx = -1; }
 }
-Coordinate::Coordinate(int x, int y) : Coordinate(x * 8 + y) {
+Coordinate::Coordinate(int x, int y) : Coordinate(x + y * 8) {
   if (x < 0 || x > 7 || y < 0 || y > 7) { idx = -1; }
 }
 bool Coordinate::operator==(const Coordinate& o) const { return idx == o.idx; }
@@ -65,16 +65,6 @@ Board::Board(const string& FEN) {
   }
 }
 
-std::string Board::coordToStr(Coordinate c) { return Board::coordToStr(c.idx); }
-std::string Board::coordToStr(int idx) { return Board::coordToStr(idx % 8, idx / 8); }
-std::string Board::coordToStr(int x, int y) {
-  if (x < 0 || x > 7 || y < 0 || y > 7) return "";
-  std::string out;
-  out += static_cast<char>('A' + x);
-  out += static_cast<char>('8' - y);
-  return out;
-}
-
 std::ostream& chess::operator<<(std::ostream& os, const Piece& p) {
   switch (p.team) {
     case Piece::White: os << "White "; break;
@@ -94,9 +84,9 @@ std::ostream& chess::operator<<(std::ostream& os, const Piece& p) {
   return os;
 }
 
-void Board::debug() const {
-  for (const auto& p : pieces) {
-    cout << p << endl;
-  }
+std::ostream& chess::operator<<(std::ostream& os, const Coordinate& c) {
+  os << static_cast<char>('A' + c.idx % 8);
+  os << static_cast<char>('8' - c.idx / 8);
+  return os;
 }
 

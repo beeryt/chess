@@ -3,6 +3,9 @@
 #include <thread>
 #include <chrono>
 #include <map>
+#include <iostream>
+using std::cout;
+using std::endl;
 
 #define SCALE 256
 
@@ -68,13 +71,12 @@ int main() {
   printf("sizeof(Texture): %ld\n", sizeof(Texture));
   chess::Board game{ "rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8" };
 
-
   auto mcb = [](int x, int y) {
     static chess::Coordinate last;
     // convert to Board::Coordinate
     auto coord = ScreenToCoordinate(x,y);
     if (coord && (coord != last)) {
-      printf("Hovering: %s\n", chess::Board::coordToStr(coord).c_str());
+      cout << "Hovering: " << coord << endl;
       last = coord;
     }
   };
@@ -83,7 +85,7 @@ int main() {
   auto ccb = [](int x, int y) {
     auto coord = ScreenToCoordinate(x,y);
     if (coord) {
-      printf("Clicked: %s\n", chess::Board::coordToStr(coord).c_str());
+      cout << "Clicked: " << coord << endl;
     }
   };
   gfx.setClickCallback(ccb);

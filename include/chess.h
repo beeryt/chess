@@ -56,24 +56,7 @@ namespace chess {
       /// @brief FEN string constructor for Board (defaults to FEN::Start).
       /// @param FEN A FEN string for the Board state.
       Board(const string& FEN = FEN::Start);
-      /// @brief Prints useful information for debugging the Board state.
-      /// @todo Remove this function.
-      void debug() const;
-      /// @todo Consider removing
       const vector<Piece>& pieces = m_pieces;
-
-      /// @todo Consider removing
-      /// @param x,y A Coordinate.
-      /// @returns A formatted Coordinate string.
-      static std::string coordToStr(int x, int y);
-      /// @todo Consider removing
-      /// @param index A Coordinate index.
-      /// @returns A formatted Coordinate string.
-      static std::string coordToStr(int index);
-      /// @todo Consider removing
-      /// @param coord A Coordinate.
-      /// @returns A formatted Coordinate string.
-      static std::string coordToStr(Coordinate coord);
 
     private:
       Piece::Team active;
@@ -81,5 +64,6 @@ namespace chess {
   };
 
   std::ostream& operator<<(std::ostream& os, const Piece& p);
+  std::ostream& operator<<(std::ostream& os, const Coordinate& c);
 }
 
