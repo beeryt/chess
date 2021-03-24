@@ -18,6 +18,11 @@ bool Coordinate::operator!=(const Coordinate& o) const { return idx != o.idx; }
 
 Piece::Piece(Type type, Coordinate coord) : type(type), coord(coord.idx) {}
 
+Move::Move(Coordinate start, Coordinate end, Piece::Type promote) :
+  start(start),
+  end(end),
+  promote(promote) {}
+
 Board::Board(const string& FEN) {
   cout << "FEN: " << FEN << endl;
   { // process FEN
@@ -65,9 +70,36 @@ Board::Board(const string& FEN) {
   }
 }
 
+bool Board::IsLegalMove(Move m) const {
+  return true;
+}
+
+bool Board::MakeMove(Move m) {
+  if (!IsLegalMove(m)) return false;
+
+  // @todo update board state
+
+  white_to_move = !white_to_move;
+  return true;
+}
+
 std::ostream& chess::operator<<(std::ostream& os, const Coordinate& c) {
   os << static_cast<char>('A' + c.idx % 8);
   os << static_cast<char>('8' - c.idx / 8);
+  return os;
+}
+
+std::ostream& chess::operator<<(std::ostream& os, const Piece& p) {
+  switch (p.type) {
+    /// @todo re-order to match enum
+    case Piece::Pawn: os << "Pawn"; break;
+    case Piece::Bishop: os << "Bishop"; break;
+    case Piece::Knight: os << "Knight"; break;
+    case Piece::Rook: os << "Rook"; break;
+    case Piece::Queen: os << "Queen"; break;
+    case Piece::King: os << "King"; break;
+    default: break;
+  }
   return os;
 }
 

@@ -47,7 +47,20 @@ namespace chess {
     const string Start = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
   }
 
+  /// A chess::Move describes a chess move.
+  /// @todo revisit this brief description.
   struct Move {
+    Coordinate start;
+    Coordinate end;
+    Piece::Type promote;
+    /// @brief Creates a chess::Move from Algebraic notation.
+    /// @param an A long algebraic notation string.
+    Move(const std::string& an);
+    /// @brief Creates a chess::Move from chess::Coordinates.
+    /// @param start The starting Coordinate.
+    /// @param end The ending Coordinate.
+    /// @param promote For promotions, what Piece::Type to promote to.
+    Move(Coordinate start, Coordinate end, Piece::Type promote = Piece::Type::None);
   };
 
   /// A chess::Board manages chess::Piece%s and validates chess::Move%s.
@@ -62,6 +75,9 @@ namespace chess {
       /// List of black pieces.
       const std::vector<Piece>& black_pieces = black;
 
+      bool IsLegalMove(Move) const;
+      bool MakeMove(Move);
+
     private:
       bool white_to_move = true;
       std::vector<Piece> white;
@@ -70,5 +86,6 @@ namespace chess {
 
   std::ostream& operator<<(std::ostream& os, const Piece& p);
   std::ostream& operator<<(std::ostream& os, const Coordinate& c);
+  std::ostream& operator<<(std::ostream& os, const Move& m);
 }
 
