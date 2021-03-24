@@ -48,7 +48,7 @@ void CoordinateToScreen(chess::Coordinate c, int& x, int& y) {
   y = (c.idx / 8) * SCALE;
 }
 
-void drawBoard(Graphics& gfx, chess::Board board) {
+void drawBoard(Graphics& gfx) {
   for (int file = 0; file < 8; ++file) {
     for (int rank = 0; rank < 8; ++rank) {
       bool even = (file + rank) % 2 == 0;
@@ -60,6 +60,9 @@ void drawBoard(Graphics& gfx, chess::Board board) {
       gfx.fillRect(x,y,w,h,color);
     }
   }
+}
+
+void drawPieces(Graphics& gfx, chess::Board board) {
   auto drawPieces = [&gfx](SpriteMap& sprites, const std::vector<chess::Piece>& pieces) {
     for (auto& p : pieces) {
       int x,y;
@@ -110,7 +113,8 @@ int main() {
 
   while (gfx.loop()) {
     gfx.clear();
-    drawBoard(gfx, game);
+    drawBoard(gfx);
+    drawPieces(gfx, game);
     gfx.swap();
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
