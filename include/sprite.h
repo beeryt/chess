@@ -53,7 +53,7 @@ class Sprite {
     Texture* texture;
     SDL_Rect region;
     unsigned frame = 0;
-    unsigned hframes = 0;
-    unsigned vframes = 0;
+    unsigned hframes = 1;
+    unsigned vframes = 1;
 };
 
