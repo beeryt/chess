@@ -74,6 +74,12 @@ void drawBoard(Graphics& gfx, chess::Board board) {
 int main() {
   Graphics gfx("Window Title", SCALE, SCALE);
   gfx.setLogical(8*SCALE,8*SCALE);
+
+  // Clear the screen to a neutral color
+  Color eigengrau{ 0x16, 0x16, 0x1D };
+  gfx.clear(eigengrau);
+  gfx.swap();
+
   printf("sizeof(chess::Piece): %ld\n", sizeof(chess::Piece));
   printf("sizeof(chess::Board): %ld\n", sizeof(chess::Board));
   printf("sizeof(Texture): %ld\n", sizeof(Texture));

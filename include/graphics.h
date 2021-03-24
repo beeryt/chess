@@ -23,6 +23,10 @@ struct Color {
   Color (uint8_t r, uint8_t g, uint8_t b, uint8_t a = 0xFF);
 };
 
+namespace colors {
+  const Color black{ 0, 0, 0, 0xFF };
+}
+
 /// Graphics is a graphical window interface
 class Graphics {
   public:
@@ -73,7 +77,8 @@ class Graphics {
     /// @returns false if window should close, true otherwise.
     bool loop();
     /// Clears the screen.
-    void clear();
+    /// @param c The draw color for clearing the screen.
+    void clear(Color c = colors::black);
     /// Swaps the internal buffer to display screen.
     void swap();
 
