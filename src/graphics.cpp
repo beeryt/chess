@@ -30,8 +30,11 @@ bool Graphics::loop() {
     if (e.type == SDL_MOUSEMOTION) {
       if (motionCallback) motionCallback(e.motion.x, e.motion.y);
     }
+    if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT) {
+      if (touchCallback) touchCallback(e.button.x, e.button.y);
+    }
     if (e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT) {
-      if (clickCallback) clickCallback(e.button.x, e.button.y);
+      if (releaseCallback) releaseCallback(e.button.x, e.button.y);
     }
   }
   return true;
@@ -47,7 +50,8 @@ void Graphics::clear(Color c) {
 }
 
 void Graphics::setMotionCallback(MotionCallback cb) { motionCallback = cb; }
-void Graphics::setClickCallback(ClickCallback cb) { clickCallback = cb; }
+void Graphics::setTouchCallback(TouchCallback cb) { touchCallback = cb; }
+void Graphics::setReleaseCallback(ReleaseCallback cb) { releaseCallback = cb; }
 
 void Graphics::setLogical(int w, int h) {
   if (0 != SDL_RenderSetLogicalSize(renderer, w, h)) {

@@ -88,24 +88,69 @@ int main() {
   printf("sizeof(Texture): %ld\n", sizeof(Texture));
   chess::Board game{ "rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8" };
 
-  auto mcb = [](int x, int y) {
-    static chess::Coordinate last;
-    // convert to Board::Coordinate
-    auto coord = ScreenToCoordinate(x,y);
-    if (coord && (coord != last)) {
-      cout << "Hovering: " << coord << endl;
-      last = coord;
-    }
-  };
-  gfx.setMotionCallback(mcb);
+  using chess::Piece;
+  using chess::Coordinate;
+  Coordinate selected;
+  Coordinate highlight;
+  Piece grabbed;
+  int grabX;
+  int grabY;
 
-  auto ccb = [](int x, int y) {
+  auto onMotion = [&](int x, int y) {
     auto coord = ScreenToCoordinate(x,y);
-    if (coord) {
-      cout << "Clicked: " << coord << endl;
+    /// @todo Track motion of grabbed piece.
+    if (grabbed.type != Piece::None) {
+      grabX = x - SCALE / 2;
+      grabY = y - SCALE / 2;
+    }
+    /// @todo Highlight valid moves onHover.
+    if (game.IsLegalMove({ selected, coord })) highlight = coord;
+    else highlight = Coordinate{};
+  };
+
+  auto onTouch = [&](int x, int y) {
+    auto coord = ScreenToCoordinate(x,y);
+    // If there is a selection, attempt to make move.
+    if (selected && selected != coord) {
+      /// @todo This code is duplicated in onRelease.
+      game.MakeMove({ selected, coord });
+      selected = Coordinate{};
+      highlight = Coordinate{};
+    }
+
+    /// @todo Make selection and grab piece if valid.
+#if 0
+    // Make selection and grab piece if valid.
+    auto p = game.GetPieceAt(coord);
+    if (game.IsActive(p)) {
+      selected = coord;
+      grabbed = p;
+      grabX = x - SCALE / 2;
+      grabY = y - SCALE / 2;
+    }
+#endif
+  };
+
+  auto onRelease = [&](int x, int y) {
+    /// @bug After this call highlight is active until next move.
+    auto coord = ScreenToCoordinate(x,y);
+    // Clear grabbed piece.
+    grabbed = chess::Piece::None;
+
+    // Nothing is selected, return.
+    if (!selected) return;
+
+    // Attempt to move and clear selection/highlight.
+    if (selected != coord) {
+      game.MakeMove({ selected, coord });
+      selected = Coordinate{};
+      highlight = Coordinate{};
     }
   };
-  gfx.setClickCallback(ccb);
+
+  gfx.setMotionCallback(onMotion);
+  gfx.setTouchCallback(onTouch);
+  gfx.setReleaseCallback(onRelease);
 
   auto& texture = gfx.createTexture("pieces.png");
   initialize_sprites(texture, white_sprites, 0);

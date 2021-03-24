@@ -48,16 +48,27 @@ class Graphics {
     /// @returns the motion callback for the window.
     MotionCallback getMotionCallback() const;
 
-    /// @brief A ClickCallback is called whenever left mouse button is released.
+    /// @brief A TouchCallback is called whenever left mouse button is pressed.
     /// @param x The x-coordinate of the cursor position.
     /// @param y The y-coordinate of the cursor position.
-    using ClickCallback = std::function<void(int x,int y)>;
-    /// @brief Sets the click callback for the window.
-    /// @param cb The click callback to set.
-    void setClickCallback(ClickCallback cb);
-    /// @brief Gets the click callback for the window.
-    /// @returns the click callback for the window.
-    ClickCallback getClickCallback() const;
+    using TouchCallback = std::function<void(int x, int y)>;
+    /// @brief Sets the touch callback for the window.
+    /// @param cb The touch callback to set.
+    void setTouchCallback(TouchCallback cb);
+    /// @brief Gets the touch callback for the window.
+    /// @returns the touch callback for the window.
+    TouchCallback getTouchCallback() const;
+
+    /// @brief A ReleaseCallback is called whenever left mouse button is released.
+    /// @param x The x-coordinate of the cursor position.
+    /// @param y The y-coordinate of the cursor position.
+    using ReleaseCallback = std::function<void(int x,int y)>;
+    /// @brief Sets the release callback for the window.
+    /// @param cb The release callback to set.
+    void setReleaseCallback(ReleaseCallback cb);
+    /// @brief Gets the release callback for the window.
+    /// @returns the release callback for the window.
+    ReleaseCallback getReleaseCallback() const;
 
     /// @brief Sets the logical pixel size of the window.
     /// @param w Logical width of window.
@@ -109,6 +120,7 @@ class Graphics {
     SDL_Renderer* renderer;
     std::vector<std::unique_ptr<Texture>> textures;
     MotionCallback motionCallback;
-    ClickCallback clickCallback;
+    TouchCallback touchCallback;
+    ReleaseCallback releaseCallback;
 };
 
