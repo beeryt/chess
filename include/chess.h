@@ -25,9 +25,11 @@ namespace chess {
     Coordinate(int idx = -1);
     /// Evaluates as True if Coordinate is valid, False otherwise.
     operator bool() const;
+    /// @brief Equality operator for two coordinates.
     /// @param o A Coordinate to compare.
     /// @returns True if equal, False otherwise.
     bool operator==(const Coordinate&) const;
+    /// @brief Inequality operator for two coordinates.
     /// @param o A Coordinate to compare.
     /// @returns False if equal, True otherwise.
     bool operator!=(const Coordinate&) const;
@@ -41,10 +43,12 @@ namespace chess {
     Type type : 3;
     /// The chess::Coordinate is encoded in 6 bits.
     uint8_t coord : 6;
+    /// Whether this piece belongs to white.
     bool white : 1;
     /// @brief Default constructor creates an invalid piece.
     /// @param type The Piece::Type of the Piece.
     /// @param coordinate The chess::Coordinate of the Piece.
+    /// @param white Whether this Piece belongs to white.
     Piece(Type type = None, Coordinate coordinate = Coordinate(), bool white = true);
   };
 
@@ -52,12 +56,18 @@ namespace chess {
     const string Start = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
   }
 
-  /// A chess::Move describes a chess move.
-  /// @todo revisit this brief description.
+  /// A chess::Move describes a chess move in long algebraic notation.
   struct Move {
+    /// @todo Add attributes for check, checkmate, and any other LAN terms missed.
+    /// The starting Coordinate of the move.
     Coordinate start;
+    /// The ending Coordinate of the move.
     Coordinate end;
+    /// For pawn promotions, which Piece::Type to promote to.
     Piece::Type promote;
+    /// @brief Evaluates as True if Move is valid, False otherwise.
+    /// @note A valid move is not necessarily a legal move.
+    /// @see Board::IsLegalMove
     operator bool() const;
     /// @brief Creates a chess::Move from Algebraic notation.
     /// @param an A long algebraic notation string.
@@ -76,20 +86,49 @@ namespace chess {
       /// @param FEN A FEN string for the Board state.
       Board(const string& FEN = FEN::Start);
 
-      bitboard ActivePieces() const;
+      /// @brief Verifies whether a move is legal on the current board.
+      /// @param move A Move to check.
+      /// @returns true if the move is legal, false otherwise.
+      bool IsLegalMove(Move move) const;
+      /// @brief Attempts to make a move on the board.
+      /// @param move A Move to attempt to make.
+      /// @returns true if move was successful, false otherwise.
+      /// @note A false return will not modify the board state.
+      bool MakeMove(Move move);
 
-      Piece GetPieceAt(Coordinate) const;
-      bool IsActive(Piece) const;
-      bool IsActive(Coordinate) const;
-      bool WhiteToMove() const;
-      bool BlackToMove() const;
-
-      Piece::Type GetPieceTypeAt(Coordinate) const;
-
-      bool IsLegalMove(Move) const;
-      bool MakeMove(Move);
-
+      /// @brief Gets all pieces on the board.
+      /// @returns List of pieces on the board.
       const std::vector<Piece> AllPieces() const;
+      /// @brief Get the Piece::Type at a given Coordinate.
+      /// @param c A Coordinate to check.
+      /// @returns A Piece::Type that was found at Coordinate.
+      /// @note May be Piece::None if Coordinate was invalid.
+      Piece::Type GetPieceTypeAt(Coordinate c) const;
+      /// @brief Get the Piece at a given Coordinate.
+      /// @param c A Coordinate to check.
+      /// @returns A Piece found at Coordinate c.
+      /// @note May be an invalid Piece. Check that Piece::type != Piece::None.
+      Piece GetPieceAt(Coordinate c) const;
+
+      /// @brief Retrieves a bitboard of the current active player's pieces.
+      /// @returns A bitboard populated with active player piece presence.
+      bitboard ActivePieces() const;
+      /// @brief A query for whether a piece belongs to the active player.
+      /// @param p A Piece to check.
+      /// @todo Verify whether the piece actually exists within the board.
+      /// @returns true if the piece belongs to the active player, false otherwise.
+      bool IsActive(Piece p) const;
+      /// @brief A query for whether a coordinate is a moveable piece owned by the active player.
+      /// @param c A Coordinate to check.
+      /// @returns true if coordinate is a moveable piece, false otherwise.
+      bool IsActive(Coordinate c) const;
+
+      /// @brief Whether it is white's turn to move.
+      /// @returns true if it is white's turn to move, false otherwise.
+      bool WhiteToMove() const;
+      /// @brief Whether it is black's turn to move.
+      /// @returns true if it is black's turn to ovme, false otherwise.
+      bool BlackToMove() const;
 
     private:
       bool white_to_move = true;

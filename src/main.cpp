@@ -95,12 +95,12 @@ int main() {
 
   auto onMotion = [&](int x, int y) {
     auto coord = ScreenToCoordinate(x,y);
-    /// @todo Track motion of grabbed piece.
+    // Track motion of grabbed piece.
     if (grabbed.type != Piece::None) {
       grabX = x - SCALE / 2;
       grabY = y - SCALE / 2;
     }
-    /// @todo Highlight valid moves onHover.
+    // Highlight valid moves onHover.
     if (game.IsLegalMove({ selected, coord })) highlight = coord;
     else highlight = Coordinate{};
   };
