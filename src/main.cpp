@@ -115,8 +115,6 @@ int main() {
       highlight = Coordinate{};
     }
 
-    /// @todo Make selection and grab piece if valid.
-#if 0
     // Make selection and grab piece if valid.
     auto p = game.GetPieceAt(coord);
     if (game.IsActive(p)) {
@@ -125,7 +123,6 @@ int main() {
       grabX = x - SCALE / 2;
       grabY = y - SCALE / 2;
     }
-#endif
   };
 
   auto onRelease = [&](int x, int y) {
@@ -153,10 +150,21 @@ int main() {
   initialize_sprites(texture, white_sprites, 0);
   initialize_sprites(texture, black_sprites, 6);
 
+  Sprite circle{ &gfx.createTexture("circle.png") };
+
   while (gfx.loop()) {
     gfx.clear();
     drawBoard(gfx);
+    int x,y;
+    CoordinateToScreen(selected, x, y);
+    gfx.drawSprite(circle, x, y, SCALE, SCALE);
+    CoordinateToScreen(highlight, x, y);
+    gfx.fillRect(x,y,SCALE,SCALE,{0xFF,0,0,0x1F});
     drawPieces(gfx, game);
+    if (grabbed.type != Piece::None) {
+      auto& sprites = grabbed.white ? white_sprites : black_sprites;
+      gfx.drawSprite(sprites[grabbed.type], grabX, grabY, SCALE, SCALE);
+    }
     gfx.swap();
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
