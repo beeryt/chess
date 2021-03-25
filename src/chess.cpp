@@ -89,8 +89,16 @@ Piece Board::GetPieceAt(Coordinate c) const {
   return Piece{};
 }
 
+bool Board::IsActive(Coordinate c) const {
+  const auto& pieces = white_to_move ? white_pieces : black_pieces;
+  for (const auto& map : pieces) {
+    if (map.second.test(c.idx)) return true;
+  }
+  return false;
+}
+
 bool Board::IsActive(Piece p) const {
-  return white_to_move == p.white;
+  return white_to_move == p.white && IsActive(Coordinate{ p.coord });
 }
 
 bool Board::IsLegalMove(Move m) const {

@@ -116,10 +116,9 @@ int main() {
     }
 
     // Make selection and grab piece if valid.
-    auto p = game.GetPieceAt(coord);
-    if (game.IsActive(p)) {
+    if (game.IsActive(coord)) {
       selected = coord;
-      grabbed = p;
+      grabbed = game.GetPieceAt(coord);
       grabX = x - SCALE / 2;
       grabY = y - SCALE / 2;
     }
@@ -128,6 +127,7 @@ int main() {
   auto onRelease = [&](int x, int y) {
     /// @bug After this call highlight is active until next move.
     auto coord = ScreenToCoordinate(x,y);
+
     // Clear grabbed piece.
     grabbed = chess::Piece::None;
 

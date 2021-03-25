@@ -76,9 +76,11 @@ namespace chess {
       /// @param FEN A FEN string for the Board state.
       Board(const string& FEN = FEN::Start);
 
+      bitboard ActivePieces() const;
 
       Piece GetPieceAt(Coordinate) const;
       bool IsActive(Piece) const;
+      bool IsActive(Coordinate) const;
       bool WhiteToMove() const;
       bool BlackToMove() const;
 
