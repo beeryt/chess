@@ -1,10 +1,14 @@
 #pragma once
 #include <vector>
+#include <bitset>
 #include <string>
+#include <unordered_map>
 
 namespace chess {
   using std::vector;
   using std::string;
+
+  using bitboard = std::bitset<64>;
 
   /// A Coordinate encodes the x- and y-coordinates as a single index.
   struct Coordinate {
@@ -37,10 +41,11 @@ namespace chess {
     Type type : 3;
     /// The chess::Coordinate is encoded in 6 bits.
     uint8_t coord : 6;
+    bool white : 1;
     /// @brief Default constructor creates an invalid piece.
     /// @param type The Piece::Type of the Piece.
     /// @param coordinate The chess::Coordinate of the Piece.
-    Piece(Type type = None, Coordinate coordinate = Coordinate());
+    Piece(Type type = None, Coordinate coordinate = Coordinate(), bool white = true);
   };
 
   namespace FEN {
@@ -53,6 +58,7 @@ namespace chess {
     Coordinate start;
     Coordinate end;
     Piece::Type promote;
+    operator bool() const;
     /// @brief Creates a chess::Move from Algebraic notation.
     /// @param an A long algebraic notation string.
     Move(const std::string& an);
@@ -70,18 +76,23 @@ namespace chess {
       /// @param FEN A FEN string for the Board state.
       Board(const string& FEN = FEN::Start);
 
-      /// List of white pieces.
-      const std::vector<Piece>& white_pieces = white;
-      /// List of black pieces.
-      const std::vector<Piece>& black_pieces = black;
+
+      Piece GetPieceAt(Coordinate) const;
+      bool IsActive(Piece) const;
+      bool WhiteToMove() const;
+      bool BlackToMove() const;
+
+      Piece::Type GetPieceTypeAt(Coordinate) const;
 
       bool IsLegalMove(Move) const;
       bool MakeMove(Move);
 
+      const std::vector<Piece> AllPieces() const;
+
     private:
       bool white_to_move = true;
-      std::vector<Piece> white;
-      std::vector<Piece> black;
+      std::unordered_map<Piece::Type, bitboard> white_pieces;
+      std::unordered_map<Piece::Type, bitboard> black_pieces;
   };
 
   std::ostream& operator<<(std::ostream& os, const Piece& p);

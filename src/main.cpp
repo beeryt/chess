@@ -63,15 +63,12 @@ void drawBoard(Graphics& gfx) {
 }
 
 void drawPieces(Graphics& gfx, chess::Board board) {
-  auto drawPieces = [&gfx](SpriteMap& sprites, const std::vector<chess::Piece>& pieces) {
-    for (auto& p : pieces) {
-      int x,y;
-      CoordinateToScreen(p.coord, x, y);
-      gfx.drawSprite(sprites[p.type], x, y, SCALE, SCALE);
-    }
-  };
-  drawPieces(white_sprites, board.white_pieces);
-  drawPieces(black_sprites, board.black_pieces);
+  for (const auto& p : board.AllPieces()) {
+    auto& sprites = p.white ? white_sprites : black_sprites;
+    int x,y;
+    CoordinateToScreen(p.coord, x, y);
+    gfx.drawSprite(sprites[p.type], x, y, SCALE, SCALE);
+  }
 }
 
 int main() {
