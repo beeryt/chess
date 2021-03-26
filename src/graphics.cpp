@@ -1,4 +1,8 @@
 #include "graphics.h"
+#include <SDL2/SDL_ttf.h>
+
+/// @todo Put this in Graphics::font or somewhere.
+TTF_Font *global_font = nullptr;
 
 Color::Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) : r(r), g(g), b(b), a(a) {}
 
@@ -9,6 +13,17 @@ void initialize() {
 
   if (SDL_Init(SDL_INIT_VIDEO) != 0) {
     fprintf(stderr, "Failed to initialize SDL2: %s\n", SDL_GetError());
+    exit(1);
+  }
+
+  if (TTF_Init() != 0) {
+    fprintf(stderr, "Failed to initialize TTF: %s\n", TTF_GetError());
+    exit(1);
+  }
+
+  global_font = TTF_OpenFont("font.ttf", 72);
+  if (global_font == NULL) {
+    fprintf(stderr, "Failed to initialize font: %s\n", TTF_GetError());
     exit(1);
   }
 }
@@ -76,3 +91,22 @@ void Graphics::drawSprite(const Sprite& sprite, int x, int y, int w, int h) {
   sprite.draw(renderer, rect);
 }
 
+void Graphics::drawChar(char c, int x, int y, int w, int h) {
+  std::string text;
+  text += c;
+  drawText(text, x, y, w, h);
+}
+
+void Graphics::drawText(const std::string& text, int x, int y, int w, int h) {
+  SDL_Surface *surface;
+  SDL_Texture *texture;
+  SDL_Color textColor = { 0xFF, 0xFF, 0xFF, 0 };
+
+  surface = TTF_RenderText_Solid(global_font, text.c_str(), textColor);
+  texture = SDL_CreateTextureFromSurface(renderer, surface);
+  SDL_FreeSurface(surface);
+
+  SDL_Rect dst{ x, y, w, h };
+  SDL_RenderCopy(renderer, texture, NULL, &dst);
+  SDL_DestroyTexture(texture);
+}

@@ -38,27 +38,36 @@ inline int floor_div(int a, int b) {
 
 chess::Coordinate ScreenToCoordinate(int x, int y) {
   return chess::Coordinate{
-    floor_div(x,SCALE),
-    floor_div(y,SCALE)
+    floor_div(x-SCALE, SCALE),
+    floor_div(y-SCALE, SCALE)
   };
 }
 
 void CoordinateToScreen(chess::Coordinate c, int& x, int& y) {
-  x = (c.idx % 8) * SCALE;
-  y = (c.idx / 8) * SCALE;
+  x = (c.idx % 8) * SCALE + SCALE;
+  y = (c.idx / 8) * SCALE + SCALE;
 }
 
 void drawBoard(Graphics& gfx) {
+  // draw chess board grid
   for (int file = 0; file < 8; ++file) {
     for (int rank = 0; rank < 8; ++rank) {
       bool even = (file + rank) % 2 == 0;
       Color color = even ? WHITE : BLACK;
       int x,y,w,h;
       w = h = SCALE;
-      x = file * SCALE;
-      y = rank * SCALE;
+      x = file * SCALE + SCALE;
+      y = rank * SCALE + SCALE;
       gfx.fillRect(x,y,w,h,color);
     }
+  }
+  for (int file = 0; file < 8; ++file) {
+    gfx.drawChar('A' + file, file * SCALE + SCALE , 0, SCALE , SCALE );
+    gfx.drawChar('A' + file, file * SCALE + SCALE , 9*SCALE, SCALE , SCALE );
+  }
+  for (int rank = 0; rank < 8; ++rank) {
+    gfx.drawChar('0' + rank, 0, rank * SCALE + SCALE , SCALE , SCALE );
+    gfx.drawChar('0' + rank, 9*SCALE, rank * SCALE + SCALE , SCALE , SCALE );
   }
 }
 
@@ -73,7 +82,7 @@ void drawPieces(Graphics& gfx, chess::Board board) {
 
 int main() {
   Graphics gfx("Window Title", SCALE, SCALE);
-  gfx.setLogical(8*SCALE,8*SCALE);
+  gfx.setLogical(10*SCALE,10*SCALE);
 
   // Clear the screen to a neutral color
   Color eigengrau{ 0x16, 0x16, 0x1D };

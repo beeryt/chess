@@ -114,6 +114,20 @@ class Graphics {
     /// @param w The horizontal width of the Sprite to draw.
     /// @param h The vertical height of the Sprite to draw.
     void drawSprite(const Sprite&, int x, int y, int w, int h);
+    /// @brief Draws a character on the screen.
+    /// @param c The character to draw.
+    /// @param x The x-coordinate of the top-left corner.
+    /// @param y The y-coordinate of the top-left corner.
+    /// @param w The horizontal width of the character.
+    /// @param h The vertical height of the character.
+    void drawChar(char c, int x, int y, int w, int h);
+    /// @brief Draws text on the screen.
+    /// @param text The text to draw.
+    /// @param x The x-coordinate of the top-left corner.
+    /// @param y The y-coordinate of the top-left corner.
+    /// @param w The horizontal width of the text to draw.
+    /// @param h The vertical height of the text to draw.
+    void drawText(const std::string& text, int x, int y, int w, int h);
 
   private:
     SDL_Window* window;
