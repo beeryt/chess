@@ -3,8 +3,8 @@
 Color::Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) : r(r), g(g), b(b), a(a) {}
 
 void initialize() {
-  bool initialized = false;
-  if (!initialized) return;
+  static bool initialized = false;
+  if (initialized) return;
   initialized = true;
 
   if (SDL_Init(SDL_INIT_VIDEO) != 0) {
