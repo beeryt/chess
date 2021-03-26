@@ -18,7 +18,8 @@ SpriteMap black_sprites;
 
 void initialize_sprites(Texture& texture, SpriteMap& sprites, unsigned offset) {
   Sprite defaultSprite{ &texture };
-  defaultSprite.setRegion(texture.getRegion());
+  auto size = texture.getSize();
+  defaultSprite.setRegion({ 0, 0, size.x, size.y });
   defaultSprite.setHFrames(6);
   defaultSprite.setVFrames(2);
 
@@ -92,7 +93,7 @@ int main() {
   printf("sizeof(chess::Piece): %ld\n", sizeof(chess::Piece));
   printf("sizeof(chess::Board): %ld\n", sizeof(chess::Board));
   printf("sizeof(Texture): %ld\n", sizeof(Texture));
-  chess::Board game{ "rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8" };
+  chess::Board game{ "rnbqkb1r/pppppppp/5n2/6B1/3P4/8/PPP1PPPP/RN1QKBNR b KQkq - 2 2" };
 
   using chess::Piece;
   using chess::Coordinate;
