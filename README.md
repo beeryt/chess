@@ -1,6 +1,8 @@
 # Chess
 A Chess program inspired by [Coding Adventure: Chess AI](https://youtu.be/U4ogK0MIzqk).
 
+![The Trompowsky Attack opening](assets/example.png)
+
 ## Installation
 You can use cmake to build chess.
 ```bash
