@@ -21,7 +21,7 @@ void initialize() {
     exit(1);
   }
 
-  global_font = TTF_OpenFont("font.ttf", 72);
+  global_font = TTF_OpenFont("assets/font.ttf", 72);
   if (global_font == NULL) {
     fprintf(stderr, "Failed to initialize font: %s\n", TTF_GetError());
     exit(1);

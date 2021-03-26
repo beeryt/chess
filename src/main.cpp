@@ -155,11 +155,11 @@ int main() {
   gfx.setTouchCallback(onTouch);
   gfx.setReleaseCallback(onRelease);
 
-  auto& texture = gfx.createTexture("pieces.png");
+  auto& texture = gfx.createTexture("assets/pieces.png");
   initialize_sprites(texture, white_sprites, 0);
   initialize_sprites(texture, black_sprites, 6);
 
-  Sprite circle{ &gfx.createTexture("circle.png") };
+  Sprite circle{ &gfx.createTexture("assets/circle.png") };
 
   while (gfx.loop()) {
     gfx.clear();
